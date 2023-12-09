@@ -34,13 +34,39 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<ResponsePayload> creatOrder(@RequestBody Order order){
         try{
-            service.create(order);
+            service.createOrder(order);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body((new ResponsePayload("Pedido criado, logo será feito e entregue")));
         }
         catch (InvalidOrderException ex){
             ResponsePayload responsePayload= new ResponsePayload(ex.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responsePayload);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponsePayload> update(@PathVariable int id,@RequestBody Order newOrder){
+        try{
+            service.updateOrder(id, newOrder);
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(new ResponsePayload("Pedido Alterado com sucesso!"));
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponsePayload(ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponsePayload> delete(@PathVariable int id){
+        try{
+            service.deleteOrder(id);
+            return ResponseEntity.status((HttpStatus.ACCEPTED))
+                    .body((new ResponsePayload("Pedido removido com sucesso!")));
+
+        }catch (ResourceNotFoundException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponsePayload(ex.getMessage()));
         }
     }
 }

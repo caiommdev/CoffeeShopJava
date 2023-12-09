@@ -14,7 +14,15 @@ public class CoffeeShopService {
         return repository.getById(id);
     }
 
-    public void create(Order order) {
+    public void createOrder(Order order) {
         repository.add(order);
+    }
+
+    public void updateOrder(int id, Order newOrder) {
+        repository.update(id, newOrder);
+    }
+
+    public void deleteOrder(int id) {
+        repository.deleteById(id);
     }
 }
