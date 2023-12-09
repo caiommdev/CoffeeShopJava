@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.infnet</groupId>
-	<artifactId>CoffeShop</artifactId>
+	<artifactId>CoffeeShop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>CoffeShop</name>
 	<description>infnet java AT</description>
