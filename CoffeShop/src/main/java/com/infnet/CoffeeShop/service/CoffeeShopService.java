@@ -2,6 +2,7 @@ package com.infnet.CoffeeShop.service;
 
 import com.infnet.CoffeeShop.domain.Coffee;
 import com.infnet.CoffeeShop.domain.Order;
+import com.infnet.CoffeeShop.domain.exceptions.ResourceNotFoundException;
 import com.infnet.CoffeeShop.repository.CoffeeShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,11 @@ public class CoffeeShopService {
     }
 
     public List<Order> getOrders(int id, Coffee coffee){
-        return repository.getAll(id,coffee);
+        List<Order> orders = repository.getAll(id,coffee);
+        if(orders.isEmpty()){
+            throw new ResourceNotFoundException("Nem um pedido foi encontrado");
+        }
+        return orders;
     }
 
     public void createOrder(Order order) {

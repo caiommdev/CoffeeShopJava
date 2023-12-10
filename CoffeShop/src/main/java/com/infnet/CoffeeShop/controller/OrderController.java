@@ -33,9 +33,9 @@ public class OrderController {
                                     @RequestParam(required = false,defaultValue = "None") Coffee coffeeType) throws JsonProcessingException {
         try {
             List<Order> orders = service.getOrders(id,coffeeType);
-            if (orders.isEmpty()){
-                return ResponseEntity.ok("Nem um pedido encontrado com os valores passados");
-            }
+            //if (orders.isEmpty()){
+            //    return ResponseEntity.ok("Nem um pedido encontrado com os valores passados");
+            //}
             return ResponseEntity.ok(orders);
         }catch (ResourceNotFoundException ex){
             ResponsePayload responsePayload = new ResponsePayload(ex.getMessage(), null);
