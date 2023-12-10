@@ -6,8 +6,7 @@ import com.infnet.CoffeeShop.domain.exceptions.InvalidOrderException;
 import com.infnet.CoffeeShop.domain.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CoffeeShopRepository {
@@ -16,7 +15,7 @@ public class CoffeeShopRepository {
 
     //Criado para facilitar os testes
     private Map<Integer,Order> initDataBase(){
-        Order order = new Order(1, "Caio", Coffee.Expresso);
+        Order order = new Order(1, "Caio", 10.00, Coffee.Expresso);
         Map<Integer, Order> orders = new HashMap<>();
         orders.put(order.getId(), order);
         this.lastId = order.getId();
@@ -29,6 +28,17 @@ public class CoffeeShopRepository {
         }
 
         return orders.get(id);
+    }
+
+    public List<Order> getAll(int id, Coffee coffee){
+        List<Order> macthOrders = new ArrayList<>();
+        orders.forEach((key, value) -> {
+            if(value.getCoffee() == coffee || (value.getId() == id)){
+                macthOrders.add(value);
+            }
+        });
+
+        return macthOrders;
     }
 
     public void add(Order order) throws InvalidOrderException {
