@@ -3,11 +3,12 @@ package com.infnet.CoffeeShop.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.infnet.CoffeeShop.domain.Coffee;
 import com.infnet.CoffeeShop.domain.Order;
-import com.infnet.CoffeeShop.domain.ResponseKanye;
 import com.infnet.CoffeeShop.domain.exceptions.InvalidOrderException;
 import com.infnet.CoffeeShop.domain.exceptions.ResourceNotFoundException;
 import com.infnet.CoffeeShop.domain.payloads.ResponsePayload;
 import com.infnet.CoffeeShop.service.CoffeeShopService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,14 @@ public class OrderController {
     @Autowired
     CoffeeShopService service;
 
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(OrderController.class);
+
     @GetMapping
     public ResponseEntity getOrders(@RequestParam(required = false,defaultValue = "0") int id,
                                     @RequestParam(required = false,defaultValue = "None") Coffee coffeeType) throws JsonProcessingException {
         try {
             List<Order> orders = service.getOrders(id,coffeeType);
-            //if (orders.isEmpty()){
-            //    return ResponseEntity.ok("Nem um pedido encontrado com os valores passados");
-            //}
             return ResponseEntity.ok(orders);
         }catch (ResourceNotFoundException ex){
             ResponsePayload responsePayload = new ResponsePayload(ex.getMessage(), null);
@@ -49,6 +50,7 @@ public class OrderController {
             service.createOrder(order);
 
             RestTemplate restTemplate = new RestTemplate();
+            LOGGER.info("Calling Kanye API");
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI("https://api.kanye.rest/"))
                     .GET()

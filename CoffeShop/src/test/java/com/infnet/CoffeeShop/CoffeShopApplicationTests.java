@@ -1,11 +1,14 @@
 package com.infnet.CoffeeShop;
 
+import com.infnet.CoffeeShop.controller.OrderController;
 import com.infnet.CoffeeShop.domain.Coffee;
 import com.infnet.CoffeeShop.domain.Order;
 import com.infnet.CoffeeShop.domain.exceptions.ResourceNotFoundException;
 import com.infnet.CoffeeShop.service.CoffeeShopService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CoffeShopApplicationTests {
 	@Autowired
 	CoffeeShopService service;
+
+	private static final Logger LOGGER =
+			LoggerFactory.getLogger(CoffeShopApplicationTests.class);
 
 	@Test
 	@DisplayName("Should return all orders by coffee or id")
