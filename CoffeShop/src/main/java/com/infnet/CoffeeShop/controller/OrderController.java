@@ -50,14 +50,7 @@ public class OrderController {
             service.createOrder(order);
 
             RestTemplate restTemplate = new RestTemplate();
-            LOGGER.info("Calling Kanye API");
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("https://api.kanye.rest/"))
-                    .GET()
-                    .version(HttpClient.Version.HTTP_2)
-                    .build();
-            HttpClient client = HttpClient.newBuilder().build();
-            HttpResponse<String> send = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> send = callYeyApi();
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body((new ResponsePayload("Pedido criado, logo será feito e entregue", send.body())));
         }
@@ -77,13 +70,19 @@ public class OrderController {
     public ResponseEntity<ResponsePayload> update(@PathVariable int id,@RequestBody Order newOrder) throws JsonProcessingException {
         try{
             service.updateOrder(id, newOrder);
-
+            HttpResponse<String> send = callYeyApi();
             return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(new ResponsePayload("Pedido Alterado com sucesso!", null));
+                    .body(new ResponsePayload("Pedido Alterado com sucesso!", send.body()));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponsePayload(ex.getMessage(), null));
         } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -92,14 +91,32 @@ public class OrderController {
     public ResponseEntity<ResponsePayload> delete(@PathVariable int id) throws JsonProcessingException {
         try{
             service.deleteOrder(id);
+            HttpResponse<String> send = callYeyApi();
             return ResponseEntity.status((HttpStatus.ACCEPTED))
-                    .body((new ResponsePayload("Pedido removido com sucesso!", null)));
+                    .body((new ResponsePayload("Pedido removido com sucesso!", send.body())));
 
         }catch (ResourceNotFoundException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponsePayload(ex.getMessage(), null));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private HttpResponse<String> callYeyApi() throws URISyntaxException, IOException, InterruptedException {
+        LOGGER.info("Calling Kanye API");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://api.kanye.rest/"))
+                .GET()
+                .version(HttpClient.Version.HTTP_2)
+                .build();
+        HttpClient client = HttpClient.newBuilder().build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 }

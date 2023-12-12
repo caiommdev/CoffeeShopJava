@@ -16,8 +16,11 @@ public class ResponsePayload {
     public ResponsePayload(String message, String json) throws JsonProcessingException {
         this.message = message;
         this.dataHora = LocalDateTime.now();
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseKanye map = mapper.readValue(json, ResponseKanye.class);
-        this.Yeyquote = map.getQuote();
+        if(json != null){
+            ObjectMapper mapper = new ObjectMapper();
+            ResponseKanye map = mapper.readValue(json, ResponseKanye.class);
+            this.Yeyquote = map.getQuote();
+        }
+
     }
 }
